@@ -1,0 +1,77 @@
+{% extends "base.html" %}
+{% block title %}BookHub - {{ form_title }}{% endblock %}
+
+{% block content %}
+<div class="form-page">
+    <div class="form-header">
+        <a class="back-link" href="{{ url_for('books.index') }}">← Volver a Mis Libros</a>
+        <h1>{{ form_title }}</h1>
+        <p class="muted">Completa todos los campos obligatorios.</p>
+    </div>
+
+    <section class="form-card">
+        <form method="POST">
+            <div class="form-grid">
+                <div class="field">
+                    <label for="title">Título *</label>
+                    <input
+                        id="title"
+                        name="title"
+                        minlength="2"
+                        required
+                        value="{{ book.title if book else '' }}"
+                    >
+                </div>
+
+                <div class="field">
+                    <label for="author">Autor *</label>
+                    <input
+                        id="author"
+                        name="author"
+                        required
+                        value="{{ book.author if book else '' }}"
+                    >
+                </div>
+
+                <div class="field">
+                    <label for="genre">Género *</label>
+                    <select id="genre" name="genre" required>
+                        <option value="">Selecciona un género</option>
+                        {% for genre in genres %}
+                            <option
+                                value="{{ genre }}"
+                                {% if book and book.genre == genre %}selected{% endif %}
+                            >
+                                {{ genre }}
+                            </option>
+                        {% endfor %}
+                    </select>
+                </div>
+
+                <div class="field">
+                    <label for="publication_date">Fecha de publicación *</label>
+                    <input
+                        id="publication_date"
+                        type="date"
+                        name="publication_date"
+                        max="{{ today }}"
+                        required
+                        value="{{ book.publication_date if book else '' }}"
+                    >
+                </div>
+            </div>
+
+            <div class="field">
+                <label for="description">Descripción *</label>
+                <textarea id="description" name="description" minlength="10" required>{{ book.description if book else '' }}</textarea>
+                <small>Mínimo 10 caracteres.</small>
+            </div>
+
+            <div class="form-actions">
+                <button class="primary-button" type="submit">{{ submit_text }}</button>
+                <a class="secondary-button button-link" href="{{ url_for('books.index') }}">Cancelar</a>
+            </div>
+        </form>
+    </section>
+</div>
+{% endblock %}

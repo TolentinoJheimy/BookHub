@@ -1,0 +1,113 @@
+{% extends "base.html" %}
+{% block title %}BookHub - Mis Libros{% endblock %}
+
+{% macro favorite_button(book) %}
+<form action="{{ url_for('favorites.toggle', book_id=book.id) }}" method="POST" class="favorite-form">
+    <button type="submit" class="favorite-button {{ 'active' if book.is_favorite else '' }}">
+        {{ "♥" if book.is_favorite else "♡" }} {{ book.favorite_count }}
+    </button>
+</form>
+{% endmacro %}
+
+{% block content %}
+<div class="page-heading">
+    <div>
+        <p class="eyebrow">BOOKHUB</p>
+        <h1>Mis Libros</h1>
+        <p class="muted">Administra tus libros y explora los publicados por la comunidad.</p>
+    </div>
+
+    <a class="primary-button button-link" href="{{ url_for('books.new_book') }}">
+        + Nuevo Libro
+    </a>
+</div>
+
+<section class="panel">
+    <div class="panel-title">
+        <h2>Mis Libros</h2>
+        <span class="counter">{{ my_books|length }}</span>
+    </div>
+
+    {% if my_books %}
+    <div class="table-wrapper">
+        <table>
+            <thead>
+                <tr>
+                    <th>Título</th>
+                    <th>Autor</th>
+                    <th>Género</th>
+                    <th>Fecha</th>
+                    <th>Favoritos</th>
+                    <th>Acciones</th>
+                </tr>
+            </thead>
+            <tbody>
+            {% for book in my_books %}
+                <tr>
+                    <td><strong>{{ book.title }}</strong></td>
+                    <td>{{ book.author }}</td>
+                    <td>{{ book.genre }}</td>
+                    <td>{{ book.publication_date }}</td>
+                    <td>{{ favorite_button(book) }}</td>
+                    <td class="actions">
+                        <a href="{{ url_for('books.detail', book_id=book.id) }}">Ver</a>
+                        <a href="{{ url_for('books.edit', book_id=book.id) }}">Editar</a>
+                        <form action="{{ url_for('books.delete', book_id=book.id) }}" method="POST" class="inline-form">
+                            <button class="delete-link" type="submit" onclick="return confirm('¿Eliminar este libro?')">
+                                Borrar
+                            </button>
+                        </form>
+                    </td>
+                </tr>
+            {% endfor %}
+            </tbody>
+        </table>
+    </div>
+    {% else %}
+        <div class="empty-state">
+            <span>📚</span>
+            <h3>Aún no tienes libros</h3>
+            <p>Agrega tu primer libro para comenzar.</p>
+            <a class="primary-button button-link" href="{{ url_for('books.new_book') }}">Agregar libro</a>
+        </div>
+    {% endif %}
+</section>
+
+<section class="panel">
+    <div class="panel-title">
+        <div>
+            <h2>Libros de la Comunidad</h2>
+            <p class="muted">Todos los usuarios registrados pueden explorar estos libros.</p>
+        </div>
+    </div>
+
+    {% if community_books %}
+    <div class="book-grid">
+        {% for book in community_books %}
+        <article class="book-card">
+            <div class="cover-placeholder">📖</div>
+            <div class="book-card-content">
+                <span class="tag">{{ book.genre }}</span>
+                <h3>{{ book.title }}</h3>
+                <p class="author">{{ book.author }}</p>
+                <p class="muted">Publicado por {{ book.owner_name }}</p>
+
+                <div class="card-bottom">
+                    {{ favorite_button(book) }}
+                    <a class="secondary-button" href="{{ url_for('books.detail', book_id=book.id) }}">
+                        Ver
+                    </a>
+                </div>
+            </div>
+        </article>
+        {% endfor %}
+    </div>
+    {% else %}
+        <div class="empty-state">
+            <span>🔎</span>
+            <h3>No hay libros publicados</h3>
+            <p>Sé el primero en compartir uno.</p>
+        </div>
+    {% endif %}
+</section>
+{% endblock %}

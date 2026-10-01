@@ -1,0 +1,42 @@
+<!doctype html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>{% block title %}BookHub{% endblock %}</title>
+    <link rel="stylesheet" href="{{ url_for('static', filename='css/style.css') }}">
+</head>
+<body>
+{% if session.get("user_id") %}
+<header class="navbar">
+    <a class="brand" href="{{ url_for('books.index') }}">
+        <span class="brand-icon">▮</span> BookHub
+    </a>
+
+    <nav>
+        <a href="{{ url_for('books.index') }}">Mis Libros</a>
+        <a href="{{ url_for('favorites.index') }}">Mis Favoritos</a>
+        <span class="welcome">Bienvenido, {{ session.get("user_name") }}</span>
+
+        <form action="{{ url_for('auth.logout') }}" method="POST" class="inline-form">
+            <button class="nav-button" type="submit">Salir</button>
+        </form>
+    </nav>
+</header>
+{% endif %}
+
+<main class="container">
+    {% with messages = get_flashed_messages(with_categories=true) %}
+        {% if messages %}
+            <div class="flash-container">
+                {% for category, message in messages %}
+                    <div class="flash {{ category }}">{{ message }}</div>
+                {% endfor %}
+            </div>
+        {% endif %}
+    {% endwith %}
+
+    {% block content %}{% endblock %}
+</main>
+</body>
+</html>

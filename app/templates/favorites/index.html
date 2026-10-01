@@ -1,0 +1,52 @@
+{% extends "base.html" %}
+{% block title %}BookHub - Mis Favoritos{% endblock %}
+
+{% block content %}
+<div class="page-heading">
+    <div>
+        <p class="eyebrow">BOOKHUB</p>
+        <h1>Mis Libros Favoritos</h1>
+        <p class="muted">Aquí aparecen todos los libros que has marcado como favoritos.</p>
+    </div>
+</div>
+
+<section class="panel">
+    {% if books %}
+    <div class="table-wrapper">
+        <table>
+            <thead>
+                <tr>
+                    <th>Título</th>
+                    <th>Autor</th>
+                    <th>Género</th>
+                    <th>Fecha</th>
+                    <th>Favoritos</th>
+                    <th>Acción</th>
+                </tr>
+            </thead>
+            <tbody>
+            {% for book in books %}
+                <tr>
+                    <td><strong>{{ book.title }}</strong></td>
+                    <td>{{ book.author }}</td>
+                    <td>{{ book.genre }}</td>
+                    <td>{{ book.publication_date }}</td>
+                    <td>♥ {{ book.favorite_count }}</td>
+                    <td>
+                        <a href="{{ url_for('books.detail', book_id=book.id) }}">Ver</a>
+                    </td>
+                </tr>
+            {% endfor %}
+            </tbody>
+        </table>
+    </div>
+    {% else %}
+        <div class="empty-state">
+            <span>♡</span>
+            <h3>No tienes favoritos todavía</h3>
+            <p>Explora la comunidad y guarda los libros que te interesen.</p>
+            <a class="primary-button button-link" href="{{ url_for('books.index') }}">Explorar libros</a>
+        </div>
+    {% endif %}
+</section>
+{% endblock %}

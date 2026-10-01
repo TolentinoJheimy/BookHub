@@ -1,0 +1,61 @@
+{% extends "base.html" %}
+{% block title %}BookHub - {{ book.title }}{% endblock %}
+
+{% block content %}
+<div class="detail-page">
+    <a class="back-link" href="{{ url_for('books.index') }}">← Volver a Mis Libros</a>
+
+    <section class="detail-card">
+        <div class="detail-cover">📖</div>
+
+        <div class="detail-info">
+            <span class="tag">{{ book.genre }}</span>
+            <h1>{{ book.title }}</h1>
+
+            <p><strong>Autor:</strong> {{ book.author }}</p>
+            <p><strong>Publicado por:</strong> {{ book.owner_name }}</p>
+            <p><strong>Fecha:</strong> {{ book.publication_date }}</p>
+
+            <div class="detail-favorite">
+                <form action="{{ url_for('favorites.toggle', book_id=book.id) }}" method="POST">
+                    <button class="primary-button" type="submit">
+                        {{ "♥ Quitar de Favoritos" if book.is_favorite else "♥ Agregar a Favoritos" }}
+                    </button>
+                </form>
+                <span>{{ book.favorite_count }} usuario(s) lo marcaron como favorito</span>
+            </div>
+        </div>
+
+        <div class="description">
+            <h2>Descripción</h2>
+            <p>{{ book.description }}</p>
+        </div>
+    </section>
+
+    <section class="panel">
+        <div class="panel-title">
+            <h2>Usuarios que agregaron este libro a favoritos</h2>
+            <span class="counter">{{ favorite_users|length }}</span>
+        </div>
+
+        {% if favorite_users %}
+        <div class="user-list">
+            {% for user in favorite_users %}
+            <div class="user-row">
+                <div class="avatar">{{ user.first_name[0]|upper }}</div>
+                <div>
+                    <strong>{{ user.first_name }} {{ user.last_name }}</strong>
+                    <small>{{ user.email }}</small>
+                </div>
+            </div>
+            {% endfor %}
+        </div>
+        {% else %}
+            <div class="empty-state compact">
+                <span>♡</span>
+                <p>Aún nadie ha agregado este libro a favoritos.</p>
+            </div>
+        {% endif %}
+    </section>
+</div>
+{% endblock %}
