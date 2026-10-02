@@ -1,30 +1,39 @@
 {% extends "base.html" %}
-{% block title %}BookHub - Iniciar sesión{% endblock %}
-
+{% block title %}BookHub - Login / Registro{% endblock %}
 {% block content %}
 <div class="auth-page">
-    <section class="auth-brand">
-        <h1>BookHub</h1>
-        <p>Comparte, descubre y comenta libros.</p>
-    </section>
-
-    <div class="auth-card">
-        <h2>Iniciar Sesión</h2>
-
-        <form method="POST">
-            <label for="email">E-mail</label>
-            <input id="email" type="email" name="email" required>
-
-            <label for="password">Contraseña</label>
-            <input id="password" type="password" name="password" required>
-
-            <button class="primary-button" type="submit">Iniciar Sesión</button>
-        </form>
-
-        <p class="auth-link">
-            ¿No tienes cuenta?
-            <a href="{{ url_for('auth.register') }}">Regístrate</a>
-        </p>
+    <header class="auth-brand">
+        <h1>{{ icon('book') }} BookHub</h1>
+        <p>Comparte, descubre y comenta libros</p>
+    </header>
+    <div class="auth-columns">
+        <section class="auth-card" id="registro">
+            <h2>Crear Cuenta</h2>
+            <form action="{{ url_for('auth.register') }}" method="POST" class="register-form">
+                {% for name, label, type in [('first_name', 'Nombre', 'text'), ('last_name', 'Apellido', 'text'),
+                ('email', 'E-mail', 'email'), ('password', 'Contraseña', 'password'), ('confirm_password', 'Confirmar
+                Contraseña', 'password')] %}
+                <div class="field"><label for="register-{{ name }}">{{ label }}</label><input id="register-{{ name }}"
+                        name="{{ name }}" type="{{ type }}" {% if type=='text' %}minlength="2" maxlength="50" {% elif
+                        type=='password' %}minlength="8" {% endif %} required {% if type !='password'
+                        %}value="{{ request.form.get(name, '') if request.endpoint == 'auth.register' else '' }}" {%
+                        endif %} autocomplete="{{ 'new-password' if type == 'password' else name }}"></div>
+                {% endfor %}
+                <button class="primary-button" type="submit">Registrarse</button>
+            </form>
+            <p class="auth-link"><a href="#inicio-sesion">¿Ya tienes cuenta? Inicia sesión</a></p>
+        </section>
+        <section class="auth-card" id="inicio-sesion">
+            <h2>Iniciar Sesión</h2>
+            <form action="{{ url_for('auth.login') }}" method="POST" class="login-form">
+                <div class="field"><label for="login-email">E-mail</label><input id="login-email" type="email"
+                        name="email" autocomplete="email" required></div>
+                <div class="field"><label for="login-password">Contraseña</label><input id="login-password"
+                        type="password" name="password" autocomplete="current-password" required></div>
+                <button class="primary-button" type="submit">Iniciar Sesión</button>
+            </form>
+            <p class="auth-link"><a href="#registro">¿No tienes cuenta? Regístrate</a></p>
+        </section>
     </div>
 </div>
 {% endblock %}

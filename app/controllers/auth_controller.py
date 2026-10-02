@@ -52,7 +52,7 @@ def home():
     if "user_id" in session:
         return redirect(url_for("books.index"))
 
-    return redirect(url_for("auth.login"))
+    return render_template("auth/login.html")
 
 
 @auth_bp.route("/login", methods=["GET", "POST"])
@@ -91,7 +91,7 @@ def register():
             for error in errors:
                 flash(error, "danger")
 
-            return render_template("auth/register.html"), 400
+            return render_template("auth/login.html"), 400
 
         user_id = User.create(
             request.form["first_name"].strip(),
@@ -107,7 +107,7 @@ def register():
         flash("Cuenta creada correctamente.", "success")
         return redirect(url_for("books.index"))
 
-    return render_template("auth/register.html")
+    return render_template("auth/login.html")
 
 
 @auth_bp.route("/logout", methods=["POST"])

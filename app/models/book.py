@@ -29,26 +29,6 @@ class Book:
         self.created_at = created_at
 
     @classmethod
-    def all_for_user(cls, user_id):
-        query = """
-            SELECT
-                b.*,
-                CONCAT(u.first_name, ' ', u.last_name) AS owner_name,
-                COUNT(DISTINCT f.user_id) AS favorite_count,
-                COALESCE(
-                    MAX(CASE WHEN f.user_id = %s THEN 1 ELSE 0 END),
-                    0
-                ) AS is_favorite
-            FROM books b
-            INNER JOIN users u ON u.id = b.user_id
-            LEFT JOIN favorites f ON f.book_id = b.id
-            GROUP BY b.id
-            ORDER BY b.created_at DESC
-        """
-        rows = db.query_db(query, (user_id,))
-        return [cls(**row) for row in rows]
-
-    @classmethod
     def find_by_id(cls, book_id, user_id):
         query = """
             SELECT

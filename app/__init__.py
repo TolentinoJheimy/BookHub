@@ -2,12 +2,6 @@ from datetime import date
 import os
 
 from flask import Flask
-from dotenv import load_dotenv
-
-from app.config import db
-
-load_dotenv()
-
 
 def create_app():
     app = Flask(__name__)

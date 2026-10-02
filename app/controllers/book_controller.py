@@ -54,8 +54,8 @@ def validate_book(form):
         try:
             selected_date = date.fromisoformat(publication_date)
 
-            if selected_date > date.today():
-                errors.append("La fecha no puede ser futura.")
+            if selected_date < date.today():
+                errors.append("La fecha no puede ser pasada.")
         except ValueError:
             errors.append("La fecha no es válida.")
 
@@ -70,12 +70,17 @@ def validate_book(form):
 def index():
     user_id = session["user_id"]
 
+    books = Book.community_books(user_id)
+
     my_books = [
-        book for book in Book.community_books(user_id)
+        book for book in books
         if book.user_id == user_id
     ]
 
-    community_books = Book.community_books(user_id)
+    community_books = [
+        book for book in books
+        if book.user_id != user_id
+    ]
 
     return render_template(
         "books/index.html",

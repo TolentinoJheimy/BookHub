@@ -1,0 +1,18 @@
+{% macro icon(name, class_name='') -%}
+<svg class="icon {{ class_name }}" viewBox="0 0 24 24" aria-hidden="true" focusable="false">
+    {% if name == 'book' %}
+    <path d="M12 5C9 2 4 2 2 3v16c3-1 7-1 10 2 3-3 7-3 10-2V3c-2-1-7-1-10 2Z" fill="currentColor" />
+    <path d="M12 5v16M1 5v15m22-15v15" fill="none" stroke="currentColor" stroke-width="1.5" />
+    {% elif name == 'heart' %}
+    <path d="M12 21 3 12C-3 5 6-1 12 6c6-7 15-1 9 6Z" fill="currentColor" />
+    {% elif name == 'image' %}
+    <circle cx="12" cy="7" r="2" fill="currentColor" />
+    <path d="m2 21 7-12 4 7 3-5 6 10Z" fill="currentColor" />
+    {% elif name == 'user' %}
+    <circle cx="12" cy="7" r="4" fill="currentColor" />
+    <path d="M3 22v-3a9 9 0 0 1 18 0v3Z" fill="currentColor" />
+    {% elif name == 'arrow' %}
+    <path d="M21 12H3m6-6-6 6 6 6" fill="none" stroke="currentColor" stroke-width="2" />
+    {% endif %}
+</svg>
+{%- endmacro %}
